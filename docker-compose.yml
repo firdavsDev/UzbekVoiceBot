@@ -2,8 +2,6 @@ version: '3.3'
 
 services:
   bot:
-    depends_on:
-      - db
     build:
       context: .
       dockerfile: Dockerfile
@@ -19,6 +17,9 @@ services:
       BOT_TOKEN: 1416252712:AAF7sZtj9NH7N3XjIB_nxvQDEMuVS38PQSQ
       DATABASE_URL: "mysql+pymysql://bot:password@db:3306/bot"
       ADMINS_ID: 1
+    depends_on:
+      - db
+
   db:
     image: mysql
     ports:
@@ -30,10 +31,12 @@ services:
       MYSQL_PASSWORD: password
     volumes:
       - db_data:/var/lib/mysql
+
   redis:
     image: redis
     volumes:
       - redis:/data
+
   rq-worker:
     depends_on:
       - db
@@ -52,6 +55,7 @@ services:
       BOT_TOKEN: BOT_TOKEN
       DATABASE_URL: "mysql+pymysql://bot:password@db:3306/bot"
       ADMINS_ID: 1
+
   rq-dashboard:
     image: eoranged/rq-dashboard
     ports:
